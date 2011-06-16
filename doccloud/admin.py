@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db import models
 from documentcloud import DocumentCloud
 from documentcloud.MultipartPostHandler import getsize
-from docs.models import Document
+from doccoud.models import Document
 from django.conf import settings
 
 

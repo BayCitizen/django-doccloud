@@ -1,4 +1,3 @@
-import docs
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -42,7 +41,7 @@ class Document(models.Model):
 
     def save(self, *args, **kwargs):
         self.updated_at = datetime.now()
-        super(docs.models.Document, self).save(*args, **kwargs)
+        super(Document, self).save(*args, **kwargs)
 
     def dc_link(self):
         return '<a href="%s" target="_blank">%s</a>' % (self.dc_url, "document cloud link")
