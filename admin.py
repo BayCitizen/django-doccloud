@@ -1,11 +1,10 @@
 from django.contrib import admin
 from django.db import models
-
 from documentcloud import DocumentCloud
 from documentcloud.MultipartPostHandler import getsize
 from docs.models import Document
-
 from django.conf import settings
+
 
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ('user', 'dc_id', 'dc_url')
@@ -16,8 +15,8 @@ class DocumentAdmin(admin.ModelAdmin):
             self.client = DocumentCloud(settings.DOCUMENTCLOUD_USERNAME,\
              settings.DOCUMENTCLOUD_PASS)
         return self.client
-    
-    def save_new(self, obj):    
+
+    def save_new(self, obj):
         obj.save()
         t_client = self.get_dc_client()
         dc_obj = t_client.documents.upload(pdf=obj.file, title=obj.title,\
@@ -35,11 +34,13 @@ class DocumentAdmin(admin.ModelAdmin):
             #object has been updated, look for file changes
             n_file = form.files['file']
             n_file_sz = getsize(n_file)
-            n_file_hdr = n_file.read(512) if n_file_sz >= 512 else n_file.read()
+            n_file_hdr = n_file.read(512) if n_file_sz >= 512\
+             else n_file.read()
             o_file = obj.file
             o_file_sz = getsize(o_file)
-            o_file_hdr = o_file.read(512) if o_file_sz >= 512 else o_file.read()
-        
+            o_file_hdr = o_file.read(512) if o_file_sz >= 512\
+             else o_file.read()
+
             if o_file_hdr != n_file_hdr:
                 #looks like the file is different (not looknin for change)
                 t_client = self.get_dc_client()
@@ -51,7 +52,7 @@ class DocumentAdmin(admin.ModelAdmin):
                 obj.save()
         else:
             obj.save()
-       
+
     def delete_model(self, request, obj):
         t_client = self.get_dc_client()
         dc_obj = t_client.documents.get(obj.dc_id)

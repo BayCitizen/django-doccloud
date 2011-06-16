@@ -1,14 +1,18 @@
 import os
-import documents, docs
+import documents
+import docs
 from datetime import datetime
 from documentcloud import DocumentCloud
 from documentcloud_docs.models import parse_file_name
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
 from datetime import datetime
 from django.conf import settings
 
+
 def generate_document_path(instance, filename):
-    return u"uploaded/documents/%s/%s/%s/%s" %(datetime.now().year, datetime.now().month, instance.slug, filename)
+    return u"uploaded/documents/%s/%s/%s/%s" % (datetime.now().year,\
+     datetime.now().month, instance.slug, filename)
+
 
 def upload_docs_dc():
     docs = list(documents.models.Document.objects.all())
@@ -18,7 +22,7 @@ def upload_docs_dc():
     for doc in docs:
         print 'attempting title=%s' % doc.title
         this_doc = docs.models.Document(file=doc.file, user=user,\
-         title=doc.title, created_at = datetime.now())
+         title=doc.title, created_at=datetime.now())
         this_doc.save()
         fn = parse_file_name(this_doc.file.name)
         extension = fn.split('.')

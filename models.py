@@ -1,15 +1,16 @@
 import docs
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from datetime import datetime
 from django_extensions.db.fields import AutoSlugField, CreationDateTimeField
-
 from documents.utils import generate_document_path
+
 
 def parse_file_name(file_path):
     items = file_path.split('/')
     return items[len(items) - 1]
+
 
 class Document(models.Model):
     #see documentcloud api https://www.documentcloud.org/help/api
@@ -38,13 +39,13 @@ class Document(models.Model):
 
     def get_absolute_url(self):
         return self.dc_url
-    
+
     def save(self, *args, **kwargs):
         self.updated_at = datetime.now()
         super(docs.models.Document, self).save(*args, **kwargs)
-    
+
     def dc_link(self):
         return '<a href="%s" target="_blank">%s</a>' % (self.dc_url, "document cloud link")
-  
+
     def aws_link(self):
-        return '<a href="%s" target="_blank">%s</a>' %(self.get_absolute_url(), "local link")
+        return '<a href="%s" target="_blank">%s</a>' % (self.get_absolute_url(), "local link")
