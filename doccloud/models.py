@@ -1,14 +1,9 @@
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.conf import settings
 from django.db import models
 from datetime import datetime
 from django_extensions.db.fields import AutoSlugField, CreationDateTimeField
-from documents.utils import generate_document_path
-
-
-def parse_file_name(file_path):
-    items = file_path.split('/')
-    return items[len(items) - 1]
 
 
 class Document(models.Model):
@@ -18,7 +13,9 @@ class Document(models.Model):
     ('public', 'Public (viewable by anyone)'),
     ('organization', 'Organization (viewable by users in your organization)')
     )
-    file = models.FileField(upload_to=generate_document_path)
+    #upload_to path can be None or
+    #https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.FileField.upload_to
+    file = models.FileField(upload_to=settings.DOCUMENTS_PATH)
     slug = AutoSlugField(populate_from=('title',))
     user = models.ForeignKey(User, blank=True, null=True)
     title = models.CharField(max_length=255)
