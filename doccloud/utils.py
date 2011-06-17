@@ -16,7 +16,7 @@ def generate_document_path(instance, filename):
 
 def upload_docs_dc():
     docs = list(documents.models.Document.objects.all())
-    user = User.objects.get(email='sshifflett@baycitizen.org')
+    user = User.objects.get(email='dev@baycitizen.org')
     t_client = DocumentCloud(settings.DOCUMENTCLOUD_USERNAME,\
      settings.DOCUMENTCLOUD_PASS)
     for doc in docs:
