@@ -91,7 +91,9 @@ class Document(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return self.dc_properties.dc_url
+        if self.dc_properties != None:
+            return self.dc_properties.dc_url
+        return self.file.url
 
     def connect_dc_doc(self):
         dc_props = DocumentCloudProperties(file=self.file, title=self.title,\
@@ -109,6 +111,6 @@ class Document(models.Model):
         self.updated_at = datetime.now()
         super(Document, self).save(*args, **kwargs)
 
-    def dc_link(self):
+    def link(self):
         return '<a href="%s" target="_blank">%s</a>' %\
-         (self.dc_properties.dc_url, "document cloud link")
+         (self.get_absolute_url(), "link")
