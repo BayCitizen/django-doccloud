@@ -1,35 +1,19 @@
-from django.contrib import admin
 from django.db import models
-from documentcloud import DocumentCloud
-from documentcloud.MultipartPostHandler import getsize
-from doccloud.models import Document
 from django.conf import settings
+from django.contrib import admin
+from documentcloud.MultipartPostHandler import getsize
+from doccloud.models import *
 
 
 class DocumentAdmin(admin.ModelAdmin):
-    exclude = ('user', 'dc_id', 'dc_url')
-    client = None
-
-    def get_dc_client(self):
-        if self.client == None:
-            self.client = DocumentCloud(settings.DOCUMENTCLOUD_USERNAME,\
-             settings.DOCUMENTCLOUD_PASS)
-        return self.client
-
-    def save_new(self, obj):
-        obj.save()
-        t_client = self.get_dc_client()
-        dc_obj = t_client.documents.upload(pdf=obj.file, title=obj.title,\
-         access=obj.access_level, secure=True)
-        obj.dc_id = dc_obj.id
-        obj.dc_url = dc_obj.canonical_url
-        obj.save()
+    #exclude = ('user', 'dc_properties__dc_id', 'dc_properties__dc_url')
 
     def save_model(self, request, obj, form, change):
         if len(form.files) > 0 and obj.updated_at == None:
             #file, obj are new
             obj.user = request.user
-            self.save_new(obj)
+            obj.connect_dc_doc()
+            obj.save()
         elif len(form.files) > 0 and obj.updated_at != None:
             #object has been updated, look for file changes
             n_file = form.files['file']
@@ -42,20 +26,14 @@ class DocumentAdmin(admin.ModelAdmin):
              else o_file.read()
 
             if o_file_hdr != n_file_hdr:
-                #looks like the file is different (not looknin for change)
-                t_client = self.get_dc_client()
-                dc_obj = t_client.documents.get(obj.dc_id)
-                dc_obj.delete()
-                self.save_new(obj)
+                #looks like the file could be different (not a whole file compar)
+                obj.dc_properties.delete()
+                obj.connect_dc_doc()
+                obj.save()
             else:
                 #just attributes changed
                 obj.save()
         else:
             obj.save()
-
-    def delete_model(self, request, obj):
-        t_client = self.get_dc_client()
-        dc_obj = t_client.documents.get(obj.dc_id)
-        dc_obj.delete()
 
 admin.site.register(Document, DocumentAdmin)
