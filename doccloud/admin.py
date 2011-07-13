@@ -6,7 +6,7 @@ from doccloud.models import *
 
 
 class DocumentAdmin(admin.ModelAdmin):
-    #exclude = ('user', 'dc_properties__dc_id', 'dc_properties__dc_url')
+    exclude = ('user', 'dc_properties', )
 
     def save_model(self, request, obj, form, change):
         if len(form.files) > 0 and obj.updated_at == None:
@@ -30,10 +30,8 @@ class DocumentAdmin(admin.ModelAdmin):
                 obj.dc_properties.delete()
                 obj.connect_dc_doc()
                 obj.save()
-            else:
-                #just attributes changed
-                obj.save()
         else:
+            obj.dc_properties.update_access(obj.access_level)
             obj.save()
 
 admin.site.register(Document, DocumentAdmin)

@@ -17,6 +17,10 @@ def get_client():
     return DocumentCloud(settings.DOCUMENTCLOUD_USERNAME,\
          settings.DOCUMENTCLOUD_PASS)
 
+def get_dc_file(id):
+    t_client = get_client()
+    return t_client.documents.get(id)
+
 def put_file(file, title, access_level):
     t_client = get_client()
     dc_obj = t_client.documents.upload(pdf=file, title=title,\
@@ -24,13 +28,9 @@ def put_file(file, title, access_level):
     return (dc_obj.id, dc_obj.canonical_url)
 
 def rm_file(id):
-    t_client = get_client()
     try:
-        dc_obj = t_client.documents.get(id)
-        dc_obj.delete()
-        return True
-    except Exception as e:
-        print e
+        get_dc_file(id).delete()
+    except Exception as e: 
         return False
 
 class DocumentCloudProperties(models.Model):
@@ -44,17 +44,27 @@ class DocumentCloudProperties(models.Model):
                 title = kwargs.pop('title')
                 access_level = kwargs.pop('access_level')
                 vals = put_file(file, title, access_level)
-                print vals
         super(DocumentCloudProperties, self).__init__(*args, **kwargs)
-        #save l8r so values aren't overwritten !?!
+        #set values l8r so values aren't overwritten
         if vals != None:
             self.dc_id = vals[0]
             self.dc_url = vals[1]
-        print 'after_super %s' % self.dc_id
+
+    def update_access(self, access):
+        if self.dc_id == None and self.dc_url == None:
+            return False #obj not set yet
+        try: 
+            dc_obj = get_dc_file(self.dc_id)
+            dc_obj.access = access
+            dc_obj.save()
+        except Exception as e:
+            return False #taking suggestions on handling mgmt issues n admin
 
     def delete(self, *args, **kwargs):
-        if not rm_file(self.dc_id):
-            return
+        #no effective way of dealing with errors on DC cloud side
+        #unless we create a custom template for managing documents 
+        rm_file(self.dc_id)
+        #so if rm_file don't complete we orphan the dc cloud doc
         super(DocumentCloudProperties, self).delete(*args, **kwargs)
 
 class Document(models.Model):
@@ -84,19 +94,15 @@ class Document(models.Model):
         return self.dc_properties.dc_url
 
     def connect_dc_doc(self):
-        try:
-            dc_props = DocumentCloudProperties(file=self.file, title=self.title,\
-             access_level=self.access_level)
-            print 'print id=%s' % dc_props.dc_id
-            dc_props.save()
-            self.dc_properties = dc_props
-        except Exception as e:
-            print e
+        dc_props = DocumentCloudProperties(file=self.file, title=self.title,\
+         access_level=self.access_level)
+        dc_props.save()
+        self.dc_properties = dc_props
 
     def delete(self, *args, **kwargs):
         self.dc_properties.delete()
         if self.dc_properties != None:
-            return #document didn't delete
+            return #document didn't delete, admin view error msgs?
         super(Document, self).delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
@@ -106,6 +112,3 @@ class Document(models.Model):
     def dc_link(self):
         return '<a href="%s" target="_blank">%s</a>' %\
          (self.dc_properties.dc_url, "document cloud link")
-
-    def aws_link(self):
-        return '<a href="%s" target="_blank">%s</a>' % (self.get_absolute_url(), "local link")
