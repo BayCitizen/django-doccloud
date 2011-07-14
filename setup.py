@@ -12,7 +12,7 @@ setup(
     ],
 
     install_requires=[
-        'distribute',
+        'python-documentcloud',
     ],
 
     classifiers=[
