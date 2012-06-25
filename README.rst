@@ -4,8 +4,7 @@ BayCitizen / django-doccloud
 This package provides a reusable django app to facilitate uploads
 and display of documents hosted on the DocumentCloud service
 
-Clone this project
-	pip install -r requirements.txt
+pip install this project: pip install django-doccloud
 
 Examples of how to use this package can be found in
 	doccloud/views.py and doccloud/templates/*
