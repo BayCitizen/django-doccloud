@@ -1,9 +1,9 @@
 from django.conf.urls.defaults import patterns, include, url
 
-#to use
-#url(r'^docs/', include('doccloud.urls')),
-
 urlpatterns = patterns('',
-    url(r'^create/$', 'doccloud.views.index', name='docs_index'),
+    url(r'^$', 'doccloud.views.list', name='docs_list'),
+    url(r'^list/$', 'doccloud.views.list', name='docs_list'),
+    url(r'^detail/(?P<slug>[\w-]+)/$', 'doccloud.views.detail', name='docs_detail'),
+    url(r'^create/$', 'doccloud.views.create', name='docs_create'),
     url(r'^upload/$', 'doccloud.views.upload', name='docs_upload'),
 )

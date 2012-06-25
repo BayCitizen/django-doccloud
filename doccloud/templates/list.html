@@ -1,0 +1,18 @@
+{% load url from future %}
+<a class="btn btn-primary btn-large" href="{% url 'docs_create'%}">Create New Document</a>
+<hr>
+<table class="table table-striped">
+    <tr>
+        <th>Title</th>
+        <th>Created</th>
+        <th>Access Level</th>
+    </tr>
+    {% for object in objects %}
+    <tr>
+        <!--TODO: restrict access to documents based on user -->
+        <td><a href="{% url 'docs_detail' slug=object.slug %}">{{object.title}}</a></td>
+        <td>{{object.created_at}}</td>
+        <td>{{object.access_level}}</td>
+    </tr>
+    {% endfor %}
+</table>

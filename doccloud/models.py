@@ -73,7 +73,7 @@ class Document(models.Model):
     upload_to path is ...
     https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.FileField.upload_to
     """
-    file = models.FileField(upload_to=settings.DOCUMENTS_PATH)
+    file = models.FileField(upload_to=settings.DOCUMENTS_PATH, max_length=255)
     slug = AutoSlugField(populate_from=('title',))
     user = models.ForeignKey(User, blank=True, null=True)
     title = models.CharField(max_length=255)
