@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='django-doccloud',
-    version='0.4.1',
+    version='0.4.2',
     description='Provides a reusable document app which interfaces with DocumentCloud',
     author='Bay Citizen',
     author_email='shifflett.shane@gmail.com',
@@ -10,7 +10,7 @@ setup(
     packages=[
         'doccloud',
     ],
-
+    package_data={'doccloud': ['templates/*.html']},
     install_requires=[
         'python-documentcloud',
     ],
