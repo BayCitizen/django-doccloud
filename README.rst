@@ -27,11 +27,9 @@ Add the urls to your project's urls.py file:
 
     (r'^docs/', include('doccloud.urls')),
 
-The example templates assume your template directory is
-mapped to 'templates/'.  If not, add the following entry to
-your settings.py file TEMPLATE_DIRS list:
+The example templates assume you have the following template loader
 
-    os.path.join(SITE_ROOT, 'templates'),
+    'django.template.loaders.app_directories.Loader',
 
 Add 'doccloud' to your installed apps list in settings.py
 
