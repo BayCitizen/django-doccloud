@@ -4,7 +4,8 @@ from django.conf import settings
 from django.db import models
 from datetime import datetime
 from documentcloud import DocumentCloud
-from django_extensions.db.fields import AutoSlugField, CreationDateTimeField
+from django_extensions.db.fields import AutoSlugField 
+from django_extensions.db.fields import CreationDateTimeField
 
 
 PRIVACY_LVLS = (

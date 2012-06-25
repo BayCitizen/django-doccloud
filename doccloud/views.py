@@ -1,7 +1,10 @@
 from django.template import RequestContext
-from django.shortcuts import render_to_response, get_object_or_404, redirect
+from django.shortcuts import render_to_response
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 from doccloud.forms import DocCloudDocForm
-from doccloud.models import DocumentCloudProperties, Document
+from doccloud.models import DocumentCloudProperties
+from doccloud.models import Document
 from django.contrib.auth.decorators import login_required
 
 #@login_required
@@ -39,7 +42,7 @@ def upload(request, template_name='upload.html'):
             if dc_form.is_valid():
                 model = dc_form.save(commit=False)
                 #model.user = request.user
-                model.connect_dc_doc()
+                model.connect_dc_doc()#queue for background processing here
                 model.save()
                 return redirect('docs_list')
             else:
