@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 
 #@login_required
-def create(request, template_name='upload.html'):
+def create(request, template_name='doccloud-upload.html'):
     context = {}
     context['form'] = DocCloudDocForm()
     return render_to_response(template_name,
@@ -17,7 +17,7 @@ def create(request, template_name='upload.html'):
                               context_instance=RequestContext(request))
 
 
-def list(request, template_name='list.html'):
+def list(request, template_name='doccloud-list.html'):
     context = {}
     context['objects'] = Document.objects.all()
     return render_to_response(template_name,
@@ -25,7 +25,7 @@ def list(request, template_name='list.html'):
                               context_instance=RequestContext(request))
 
 
-def detail(request, slug, template_name='detail.html'):
+def detail(request, slug, template_name='doccloud-detail.html'):
     '''
     Documents where access_level==Private will not appear in the detail page
     unless the user is logged in.
@@ -44,7 +44,7 @@ def detail(request, slug, template_name='detail.html'):
 
 
 #@login_required
-def upload(request, template_name='upload.html'):
+def upload(request, template_name='doccloud-upload.html'):
     context = {}
     try:
         if request.method == 'POST':

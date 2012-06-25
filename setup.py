@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='django-doccloud',
-    version='0.4',
+    version='0.4.1',
     description='Provides a reusable document app which interfaces with DocumentCloud',
     author='Bay Citizen',
     author_email='shifflett.shane@gmail.com',
@@ -16,7 +16,7 @@ setup(
     ],
 
     classifiers=[
-        'Development Status :: 4 - Alpha',
+        'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
