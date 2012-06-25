@@ -15,8 +15,11 @@ Getting Started
 You're settings.py file needs three variables
 
 Provide credentials and a path to save the document locally
+
 	DOCUMENTS_PATH = os.path.join(MEDIA_ROOT, 'documents')
+
 	DOCUMENTCLOUD_USERNAME='****'  # ur documentcloud password
+
 	DOCUMENTCLOUD_PASS='****'  # ur documentcloud password 
 
 
