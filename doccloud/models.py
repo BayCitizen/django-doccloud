@@ -1,3 +1,4 @@
+from django import VERSION
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
@@ -43,10 +44,17 @@ def rm_file(id):
 
 class DocumentCloudProperties(models.Model):
     dc_id = models.CharField(max_length=300, blank=False, null=False)
-    dc_url = models.URLField(verify_exists=False,
-                             max_length=200,
-                             null=False,
-                             blank=False)
+
+    #Verify Exists creates a security hole and is active by default in Django 1.3. It's removed in 1.4+
+    if VERSION[0] == 1 and VERSION[1] < 4:
+        dc_url = models.URLField(verify_exists=False,
+                                 max_length=200,
+                                 null=False,
+                                 blank=False)
+    else:
+        dc_url = models.URLField(max_length=200,
+                                 null=False,
+                                 blank=False)
 
     def __init__(self, *args, **kwargs):
         vals = None
