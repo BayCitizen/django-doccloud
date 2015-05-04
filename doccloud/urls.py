@@ -1,6 +1,7 @@
-from django.conf.urls.defaults import patterns
-from django.conf.urls.defaults import include
-from django.conf.urls.defaults import url
+from django.conf.urls import url, patterns
+# from django.conf.urls.defaults import patterns
+# from django.conf.urls.defaults import include
+# from django.conf.urls.defaults import url
 
 urlpatterns = patterns('',
     url(r'^$', 'doccloud.views.list', name='docs_list'),
